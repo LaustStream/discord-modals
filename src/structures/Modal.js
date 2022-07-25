@@ -1,9 +1,9 @@
-'use strict';
+"use strict";
 
-const { Util } = require('discord.js');
-const BaseMessageComponent = require('./BaseMessageComponent');
-const ModalActionRow = require('./ModalActionRow');
-const { RangeError } = require('./errors');
+const { verifyString } = require("discord.js");
+const BaseMessageComponent = require("./BaseMessageComponent");
+const ModalActionRow = require("./ModalActionRow");
+const { RangeError } = require("./errors");
 
 /**
  * Represents a Modal Form to be shown in response to an Interaction.
@@ -39,7 +39,10 @@ class Modal {
      * @type {BaseMessageComponent}
      */
 
-    this.components = data.components?.map(c => new ModalActionRow(c).addComponent(c.components[0])) ?? [];
+    this.components =
+      data.components?.map((c) =>
+        new ModalActionRow(c).addComponent(c.components[0])
+      ) ?? [];
   }
 
   /**
@@ -49,7 +52,11 @@ class Modal {
    */
 
   addComponents(...components) {
-    this.components.push(...components.flat(Infinity).map(c => new ModalActionRow().addComponent(c)));
+    this.components.push(
+      ...components
+        .flat(Infinity)
+        .map((c) => new ModalActionRow().addComponent(c))
+    );
     return this;
   }
 
@@ -71,7 +78,7 @@ class Modal {
    */
 
   setCustomId(customId) {
-    this.customId = Util.verifyString(customId, RangeError, 'MODAL_CUSTOM_ID');
+    this.customId = verifyString(customId, RangeError, "MODAL_CUSTOM_ID");
     return this;
   }
 
@@ -84,7 +91,11 @@ class Modal {
    */
 
   spliceComponents(index, deleteCount, ...components) {
-    this.components.splice(index, deleteCount, ...components.flat(Infinity).map(c => BaseMessageComponent.create(c)));
+    this.components.splice(
+      index,
+      deleteCount,
+      ...components.flat(Infinity).map((c) => BaseMessageComponent.create(c))
+    );
     return this;
   }
 
@@ -95,7 +106,7 @@ class Modal {
    */
 
   setTitle(title) {
-    this.title = Util.verifyString(title, RangeError, 'MODAL_TITLE');
+    this.title = verifyString(title, RangeError, "MODAL_TITLE");
     return this;
   }
 
@@ -103,7 +114,7 @@ class Modal {
     return {
       title: this.title,
       custom_id: this.customId,
-      components: this.components.map(c => c.toJSON()),
+      components: this.components.map((c) => c.toJSON()),
     };
   }
 }
